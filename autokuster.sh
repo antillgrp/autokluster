@@ -1,12 +1,23 @@
 #!/bin/bash
 
-####################################################################################################
-### COMMAND:  source <(wget -qO - https://github.com/antillgrp/autokluster/raw/master/autokuster.sh)
-####################################################################################################
+##############################################################################################################
+### INSTALL COMMAND:  source <(wget -qO - https://github.com/antillgrp/autokluster/raw/master/autokuster.sh)
+##############################################################################################################
 
 # Source: http://kubernetes.io/docs/getting-started-guides/kubeadm
 
 set -e
+
+source /etc/lsb-release
+if [ "$DISTRIB_RELEASE" != "20.04" ]; then
+    echo "################################# "
+    echo "############ WARNING ############ "
+    echo "################################# "
+    echo
+    echo "This script only works on Ubuntu 20.04!"
+    echo "You're using: ${DISTRIB_DESCRIPTION}"
+    exit 1
+fi
 
 NC='\033[0m'; YELLOW='\033[0;33m'; GREEN='\033[0;32m'; RED='\033[0;31m'
 
@@ -44,21 +55,7 @@ network:
        addresses: [8.8.8.8,8.8.4.4,192.168.10.2]
 EOF
 
-netplan apply
-
 #################################################################################################################################
-
-source /etc/lsb-release
-if [ "$DISTRIB_RELEASE" != "20.04" ]; then
-    echo "################################# "
-    echo "############ WARNING ############ "
-    echo "################################# "
-    echo
-    echo "This script only works on Ubuntu 20.04!"
-    echo "You're using: ${DISTRIB_DESCRIPTION}"
-    echo "Better ABORT with Ctrl+C. Or press any key to continue the install"
-    read
-fi
 
 ### setup terminal
 apt-get --allow-unauthenticated update
@@ -302,6 +299,10 @@ echo
 
 fi
 
-
-
-bash
+IP=$(ip addr show ens33 | awk '/inet / {print $2}' | cut -d/ -f1)
+if [[ $IP != "192.168.10.$H" ]]
+then
+  printf "${YELLOW} IP address will change to 192.168.10.$H.${NC}"
+  printf "${YELLOW} If connected through SSH, connect to the new IP.${NC}"
+  netplan apply
+if 
