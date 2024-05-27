@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# COMMAND: wget -qO - https://github.com/antillgrp/autokluster/raw/master/autokuster.sh | bash
+
 # Source: http://kubernetes.io/docs/getting-started-guides/kubeadm
 
 set -e
