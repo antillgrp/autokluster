@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# COMMAND: wget -qO - https://github.com/antillgrp/autokluster/raw/master/autokuster.sh | bash
+####################################################################################################
+### COMMAND:  source <(wget -qO - https://github.com/antillgrp/autokluster/raw/master/autokuster.sh)
+####################################################################################################
 
 # Source: http://kubernetes.io/docs/getting-started-guides/kubeadm
 
@@ -66,10 +68,17 @@ echo 'set tabstop=2' >> ~/.vimrc
 echo 'set shiftwidth=2' >> ~/.vimrc
 echo 'set expandtab' >> ~/.vimrc
 echo 'source <(kubectl completion bash)' >> ~/.bashrc
-echo 'alias k=kubectl' >> ~/.bashrc
-echo 'alias c=clear' >> ~/.bashrc
 echo 'complete -F __start_kubectl k' >> ~/.bashrc
 sed -i '1s/^/force_color_prompt=yes\n/' ~/.bashrc
+
+echo "alias c='clear'"               >> $HOME/.bash_aliases && 
+echo "alias k='kubectl'"             >> $HOME/.bash_aliases &&
+echo "alias kk='kubectl -k'"         >> $HOME/.bash_aliases && 
+echo "alias kak='kubectl apply -k'"  >> $HOME/.bash_aliases && 
+echo "alias kdk='kubectl delete -k'" >> $HOME/.bash_aliases && 
+echo "alias kaf='kubectl apply -f'"  >> $HOME/.bash_aliases && 
+echo "alias kdf='kubectl delete -f'" >> $HOME/.bash_aliases && 
+source $HOME/.bash_aliases
 
 ### disable linux swap and remove any existing swap partitions
 swapoff -a
@@ -261,7 +270,20 @@ tar xzf ${ETCDCTL_VERSION_FULL}.tar.gz ${ETCDCTL_VERSION_FULL}/etcdctl
 mv ${ETCDCTL_VERSION_FULL}/etcdctl /usr/bin/
 rm -rf ${ETCDCTL_VERSION_FULL} ${ETCDCTL_VERSION_FULL}.tar.gz
 
-# TODO install local-path-provisioner
+### local-path-storage
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.26/deploy/local-path-storage.yaml 
+
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: local-path-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: local-path
+#   resources:
+#     requests:
+#       storage: 128Mi
 
 echo
 echo "### COMMAND TO ADD A WORKER NODE ###"
@@ -278,6 +300,8 @@ echo "EXECUTE ON MASTER: kubeadm token create --print-join-command --ttl 0"
 echo "THEN RUN THE OUTPUT AS COMMAND HERE TO ADD AS WORKER"
 echo
 
-fi 
+fi
+
+
 
 bash
