@@ -32,9 +32,6 @@ do
   printf>&2 'Invalid IP host: "%s"\n' "$H" 
 done
 
-printf "\n${GREEN}This script will be logged to the file ($HOME/install_$HOSTNAME_PREFIX-$H.sh.log) and to the screen${NC}\n"
-exec 1> >( tee -a $HOME/install_$HOSTNAME_PREFIX-$H.sh.log ) 2>&1
-
 hostnamectl set-hostname "$HOSTNAME_PREFIX-$H"
 
 cat <<EOF >/etc/netplan/01-network-manager-all.yaml
@@ -54,6 +51,9 @@ network:
       nameservers:
        addresses: [8.8.8.8,8.8.4.4,192.168.10.2]
 EOF
+
+printf "\n${GREEN}This script will be logged to the file ($HOME/install_$HOSTNAME_PREFIX-$H.sh.log) and to the screen${NC}\n"
+exec 1> >( tee -a $HOME/install_$HOSTNAME_PREFIX-$H.sh.log ) 2>&1
 
 #################################################################################################################################
 
@@ -299,10 +299,8 @@ echo
 
 fi
 
-IP=$(ip addr show ens33 | awk '/inet / {print $2}' | cut -d/ -f1)
-if [[ $IP != "192.168.10.$H" ]]
-then
-  printf "${YELLOW} IP address will change to 192.168.10.$H.${NC}"
-  printf "${YELLOW} If connected through SSH, connect to the new IP.${NC}"
-  netplan apply
-if 
+if [[ "$(ip addr show ens33 | awk '/inet / {print $2}' | cut -d/ -f1)" != "192.168.10.$H" ]]; then
+printf "${YELLOW}IP address will change to 192.168.10.$H.${NC}"
+printf "${YELLOW} If connected through SSH, connect to the new IP.${NC}"
+netplan apply
+fi
