@@ -260,7 +260,7 @@ sudo cp -i /etc/kubernetes/admin.conf ~/.kube/config
 
 ### CNI
 kubectl apply -f https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
-sleep 120
+#sleep 120
 kubectl wait pods -n kube-flannel  -l app=flannel --for condition=Ready --timeout=180s
 
 # kubectl apply -f https://raw.githubusercontent.com/killer-sh/cks-course-environment/master/cluster-setup/calico.yaml
