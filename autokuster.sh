@@ -21,7 +21,7 @@ fi
 
 NC='\033[0m'; YELLOW='\033[0;33m'; GREEN='\033[0;32m'; RED='\033[0;31m'
 
-while printf "${YELLOW}Task (1. install kubernetes master, 2. install kubernetes worker):${NC}" && read -r TASK
+while printf "\n${YELLOW}Task (1. install kubernetes master, 2. install kubernetes worker):${NC}" && read -r TASK
 do pattern='[12]' && [[ $TASK =~ $pattern ]] && break 1 ||  printf>&2 'Invalid task: "%s"\n' "$TASK"; done
 
 [[ "${TASK}" == "1" ]] && HOSTNAME_PREFIX="master" || HOSTNAME_PREFIX="worker" 
