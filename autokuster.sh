@@ -52,7 +52,7 @@ network:
        addresses: [8.8.8.8,8.8.4.4,192.168.10.2]
 EOF
 
-printf "\n${GREEN}This script will be logged to the file ($HOME/install_$HOSTNAME_PREFIX-$H.sh.log) and to the screen${NC}\n"
+printf "\n${GREEN}This script will be logged to the file ($HOME/install_$HOSTNAME_PREFIX-$H.sh.log) and to the screen${NC}\n\n"
 exec 1> >( tee -a $HOME/install_$HOSTNAME_PREFIX-$H.sh.log ) 2>&1
 
 IP=$(ip addr show ens33 | awk '/inet / {print $2}' | cut -d/ -f1)
