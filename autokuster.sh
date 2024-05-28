@@ -52,7 +52,8 @@ network:
        addresses: [8.8.8.8,8.8.4.4,192.168.10.2]
 EOF
 
-if [[ "$(ip addr show ens33 | awk '/inet / {print $2}' | cut -d/ -f1)" != "192.168.10.$H" ]]; then
+IP=$(ip addr show ens33 | awk '/inet / {print $2}' | cut -d/ -f1)
+if [[ $IP != "192.168.10.$H" ]]; then
 printf "\n${YELLOW}IP address will change to 192.168.10.$H.${NC}"
 printf "${YELLOW} If connected through SSH, connect to the new IP.${NC}\n"
 netplan apply
